@@ -1,6 +1,7 @@
-from rocketcea.cea_obj import CEA_Obj, add_new_fuel
+from rocketcea.cea_obj_w_units import CEA_Obj
+from rocketcea.cea_obj import add_new_fuel
 
-import PyQt5, PySide2
+#import PyQt5, PySide2
 
 import matplotlib
 matplotlib.use('Qt5Agg')  # Use the TkAgg backend
@@ -11,12 +12,24 @@ import matplotlib.pyplot as plt
 def bar_to_psi(x):
     return x*14.5038
 
+
+# RocketCEA doesnt have paraffin built in: CREATE IT BELOW
+fuel_name = 'paraffin'
+#C32H66 from RPA Paraffin Wax Composition
+fuel_properties = f"""
+fuel paraffin  C 32   H 66    wt%=100.00
+h,KJ/Kgmol=-1860600     t(k)=298.15   rho,kg/m3={900}
+"""
+
+add_new_fuel(fuel_name, fuel_properties)
+
 #names
-fuel_name = 'Kerosene'
 ox_name = 'N2O'
+fuel_name = 'CH4'
 
 # Define the range of chamber pressures
-chamber_pressures = [5, 10, 15, 20, 30]
+chamber_pressures = [10, 20, 30, 40, 50]
+
 
 expratio = 12
 
@@ -24,7 +37,7 @@ expratio = 12
 plt.figure(figsize=(10, 6))  # Optional: Adjust the figure size
 
 for Pc in chamber_pressures:
-    ispObj = CEA_Obj(oxName=ox_name, fuelName=fuel_name)
+    ispObj = CEA_Obj(oxName=ox_name, fuelName=fuel_name, pressure_units='Bar', isp_units='sec', cstar_units='m/s', temperature_units='K', sonic_velocity_units='m/s',enthalpy_units='kJ/kg',density_units='kg/m^3',specific_heat_units='kJ/kg-K')
 
     of_arr = []
     isp_arr = []
